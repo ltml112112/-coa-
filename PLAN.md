@@ -96,7 +96,37 @@ PDF 분석 리포트에서 HPLC 데이터를 추출하여 COA(Certificate of Ana
 - `openpyxl`: Excel 읽기/쓰기
 - `re` (정규표현식): HPLC 데이터 파싱
 
-## 미결정 사항
-- [ ] 인원별 한글→영문 이름 매핑 (사용자 제공 예정)
-- [ ] Appearance 값 처리 방법 (현재 수식 `=I21`로 Specification 값 복사)
-- [ ] Issue No., Issue Date, Manufactured Date 등 자동생성 여부
+## 현재 완료된 항목 (v1.0)
+- [x] PDF 텍스트 파싱 (pdftotext 기반)
+- [x] HPLC Area Percent Report 추출
+- [x] 확대(Zoomed) 데이터 자동 제거
+- [x] Ratio 데이터 분리
+- [x] Purity 계산 (area% >1% 합산, 2회 injection min값)
+- [x] 다중 Lot PDF 지원 (Lot별 개별 COA 생성)
+- [x] COA 엑셀 템플릿 기입 (병합셀/수식 보존)
+- [x] Excel + PDF 출력
+- [x] CLI 인터페이스
+
+---
+
+## TODO (추후 작업)
+
+### 사용자 데이터 입력 대기
+- [ ] **분석자 영문 이름 매핑** — `src/config.py` > `ANALYST_NAME_MAP`에 한글→영문 추가
+  - 현재: 강병구, 성재관, 양원준, 김수연 (국문 그대로 출력 중)
+- [ ] **서명 이미지 (PNG)** — 분석자별 서명 파일 업로드
+  - `C37` 위치에 분석자 서명 삽입 예정
+  - `M37` 위치에 QM Manager 서명 삽입 예정
+- [ ] **QM Manager 리스트** — 이름 + 직함 목록 제공
+  - 현재: "Chang Seok-Keon ( QM Manager )" 고정값
+- [ ] **Issue No. 자동 번호 규칙** — 뒤 4자리 오름차순 + "-00" 접미사
+  - 예: COAN4010001-00, COAN4010002-00, ...
+  - 규칙 확정 후 자동 채번 로직 구현
+
+### 기능 개선
+- [ ] **Appearance 자동 매핑** — 품목별 기본 외관값 설정 (Yellowish powder / White powder / Reddish 등)
+- [ ] **Manufactured Date 자동 추출** — PDF 또는 별도 입력에서 제조일 가져오기
+- [ ] **Issue Date** — 현재 실행일 자동 기입 (확정)
+- [ ] **Purity Specification 자동 매핑** — 품목별 기준값 (현재: ≥ 99.900% 고정)
+- [ ] **복수 PDF 동시 입력 시 동일 Lot 병합** — 같은 Lot이 여러 파일에 분산된 경우 자동 합치기
+- [ ] **에러 핸들링 강화** — 파싱 실패 시 상세 로그, 어떤 페이지에서 실패했는지 표시
